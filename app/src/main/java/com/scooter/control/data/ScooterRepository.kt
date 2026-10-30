@@ -33,6 +33,8 @@ data class ScooterState(
     val rangeKm: Double = 21.7,
     val lock: LockState = LockState.LOCKED,
     val headlightOn: Boolean = false,
+    val alarmOn: Boolean = false,
+    val cruiseOn: Boolean = false,
     val isBusy: Boolean = false,
     val ble: BleStatus = BleStatus.IDLE,
     val bleDevice: String? = null,
@@ -133,6 +135,8 @@ class ScooterRepository {
     suspend fun lock() = act { it.copy(lock = LockState.LOCKED, lastAction = "Замок закрыт") }
     suspend fun find() = act { it.copy(lastAction = "Самокат подаёт сигнал") }
     suspend fun horn() = act { it.copy(lastAction = "Гудок") }
+    suspend fun toggleAlarm() = act { it.copy(alarmOn = !it.alarmOn, lastAction = if (!it.alarmOn) "Сигнализация включена" else "Сигнализация выключена") }
+    suspend fun toggleCruise() = act { it.copy(cruiseOn = !it.cruiseOn, lastAction = if (!it.cruiseOn) "Круиз-контроль включён" else "Круиз-контроль выключен") }
     suspend fun toggleHeadlight() = act { it.copy(headlightOn = !it.headlightOn, lastAction = if (!it.headlightOn) "Фонарь включён" else "Фонарь выключен") }
 
     private suspend fun act(onSuccess: (ScooterState) -> ScooterState) {

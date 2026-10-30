@@ -46,6 +46,9 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.SportsEsports
+import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -97,6 +100,7 @@ fun HomeScreen(
     settings: SettingsStore,
     onProfile: () -> Unit,
     onSettings: () -> Unit,
+    onGame: () -> Unit,
 ) {
     val p = LocalPalette.current
     val context = LocalContext.current
@@ -143,7 +147,7 @@ fun HomeScreen(
     ) {
         Spacer(Modifier.height(20.dp))
 
-        Reveal(0) { TopBar(profile, state, session.avatarFile(), onProfile, onSettings, settings) }
+        Reveal(0) { TopBar(profile, state, session.avatarFile(), onProfile, onSettings, onGame, settings) }
 
         Spacer(Modifier.height(20.dp))
 
@@ -237,6 +241,29 @@ fun HomeScreen(
         Spacer(Modifier.height(14.dp))
 
         Reveal(7) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                ControlCard(
+                    title = "alarm", subtitle = if (state.alarmOn) "armed" else "disarmed",
+                    icon = Icons.Filled.Shield,
+                    highlighted = state.alarmOn,
+                    enabled = canAct, modifier = Modifier.weight(1f)
+                ) { scope.launch { repository.toggleAlarm() } }
+
+                ControlCard(
+                    title = "cruise", subtitle = if (state.cruiseOn) "on" else "off",
+                    icon = Icons.Filled.Speed,
+                    highlighted = state.cruiseOn,
+                    enabled = canAct, modifier = Modifier.weight(1f)
+                ) { scope.launch { repository.toggleCruise() } }
+            }
+        }
+
+        Spacer(Modifier.height(14.dp))
+
+        Reveal(8) {
             ControlCard(
                 title = "horn", subtitle = "sound signal",
                 icon = Icons.Filled.Campaign,
@@ -323,6 +350,7 @@ private fun TopBar(
     avatarFile: File,
     onProfile: () -> Unit,
     onSettings: () -> Unit,
+    onGame: () -> Unit,
     settings: SettingsStore,
 ) {
     val p = LocalPalette.current
@@ -352,6 +380,9 @@ private fun TopBar(
             }
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = onGame) {
+                Icon(Icons.Filled.SportsEsports, contentDescription = "game", tint = p.textSecondary)
+            }
             IconButton(onClick = onSettings) {
                 Icon(Icons.Filled.Settings, contentDescription = "settings", tint = p.textSecondary)
             }

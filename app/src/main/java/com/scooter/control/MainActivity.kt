@@ -30,6 +30,7 @@ import com.scooter.control.data.ProfileApi
 import com.scooter.control.data.ScooterRepository
 import com.scooter.control.data.SessionStore
 import com.scooter.control.data.SettingsStore
+import com.scooter.control.ui.GameScreen
 import com.scooter.control.ui.HomeScreen
 import com.scooter.control.ui.LoginScreen
 import com.scooter.control.ui.ProfileScreen
@@ -118,7 +119,11 @@ class MainActivity : ComponentActivity() {
                                 settings = settingsStore,
                                 onProfile = { navController.navigate("profile") },
                                 onSettings = { navController.navigate("settings") },
+                                onGame = { navController.navigate("game") },
                             )
+                        }
+                        composable("game") {
+                            GameScreen(onBack = { navController.popBackStack() })
                         }
                         composable("profile") {
                             ProfileScreen(
